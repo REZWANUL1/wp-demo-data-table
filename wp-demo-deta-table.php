@@ -17,10 +17,40 @@
 if (!defined('ABSPATH')) {
    exit;
 }
-
+// ##########
+//?  table lists
+// ##########
+require_once('data-persons-table.php');
+// ##########
+//? adding demo data link
+// ##########
+include_once('demo-database/dataset.php');
+//? load text domain
 function wddt_plugin_translation()
 {
    load_plugin_textdomain('your-plugin-textdomain', false, dirname(plugin_basename(__FILE__)) . '/languages/');
 }
 
 add_action('plugins_loaded', 'wddt_plugin_translation');
+
+// ##########
+//?add detatable admin page
+// ##########
+
+add_action("admin_menu", "datable_admin_page");
+
+function datable_admin_page()
+{
+   add_menu_page(
+      __('Data Table', 'tabledate'),
+      __('Data Table', 'tabledate'),
+      'manage_options',
+      'datatable',
+      'datable_display_table'
+   );
+}
+
+function datable_display_table()
+{
+   echo "<h2>Hello World</h2>";
+}
