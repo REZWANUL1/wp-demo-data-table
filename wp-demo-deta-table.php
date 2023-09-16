@@ -14,9 +14,9 @@
  * Text Domain:       wddt
  * Domain Path:       /languages
  */
-if (!defined('ABSPATH')) {
-   exit;
-}
+// if (!defined('ABSPATH')) {
+//    exit;
+// }
 // ##########
 //?  table lists
 // ##########
@@ -47,6 +47,15 @@ function datable_admin_page()
    );
 }
 
+function datable_search_by_name($item)
+{
+   $name = strtolower($item['name']);
+   $search_name = sanitize_text_field($_REQUEST['s']);
+   if (strpos($name, $search_name) !== false) {
+      return true;
+   }
+   return false;
+}
 function datable_display_table()
 {
    // ##########
@@ -54,18 +63,24 @@ function datable_display_table()
    // ##########
    include_once('demo-database/dataset.php');
    $table = new Persons_Table();
+   if (isset($_REQUEST['s'])) {
+      $search_name = $_REQUEST['s'];
+      $data = array_filter($data, 'datable_search_by_name');
+   }
    $table->set_data($data);
    $table->prepare_items();
 ?>
    <div class="warp">
-      <from method="GET">
-         <h2><?php _e('Persons', 'wddt'); ?></h2>
+      <h2><?php _e('Persons', 'wddt'); ?></h2>
+      <form method="GET">
          <?php
          $table->search_box('search', 'search_id');
          $table->display();
          ?>
-      </from>
+         <input type="hidden" name="page" value="<?php echo $_REQUEST['page']; ?>">
+      </form>
    </div>
+
 <?php
 
 }
