@@ -21,10 +21,7 @@ if (!defined('ABSPATH')) {
 //?  table lists
 // ##########
 require_once('data-persons-table.php');
-// ##########
-//? adding demo data link
-// ##########
-include_once('demo-database/dataset.php');
+
 //? load text domain
 function wddt_plugin_translation()
 {
@@ -52,5 +49,23 @@ function datable_admin_page()
 
 function datable_display_table()
 {
-   echo "<h2>Hello World</h2>";
+   // ##########
+   //? adding demo data link
+   // ##########
+   include_once('demo-database/dataset.php');
+   $table = new Persons_Table();
+   $table->set_data($data);
+   $table->prepare_items();
+?>
+   <div class="warp">
+      <from method="GET">
+         <h2><?php _e('Persons', 'wddt'); ?></h2>
+         <?php
+         $table->search_box('search', 'search_id');
+         $table->display();
+         ?>
+      </from>
+   </div>
+<?php
+
 }
