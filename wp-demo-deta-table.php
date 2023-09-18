@@ -62,7 +62,37 @@ function datable_display_table()
    //? adding demo data link
    // ##########
    include_once('demo-database/dataset.php');
+   // ##########
+   //? age sorting
+   // ##########
+
+   $orderby = $_REQUEST['orderby'] ?? '';
+   $order = $_REQUEST['order'] ?? '';
+   // ##########
+   //? add table functionality
+   // ##########
    $table = new Persons_Table();
+   if ('age' == $orderby) {
+      if ('asc' === $order) {
+         usort($data, function ($item1, $item2) {
+            return $item2['age'] <=> $item1['age'];
+         });
+      } else {
+         usort($data, function ($item1, $item2) {
+            return $item1['age'] <=> $item2['age'];
+         });
+      }
+   } else if ('name' == $orderby) {
+      if ('asc' === $order) {
+         usort($data, function ($item1, $item2) {
+            return $item2['name'] <=> $item1['name'];
+         });
+      } else {
+         usort($data, function ($item1, $item2) {
+            return $item1['name'] <=> $item2['name'];
+         });
+      }
+   } 
    if (isset($_REQUEST['s'])) {
       $search_name = $_REQUEST['s'];
       $data = array_filter($data, 'datable_search_by_name');
