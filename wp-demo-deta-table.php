@@ -46,7 +46,18 @@ function datable_admin_page()
       'datable_display_table'
    );
 }
-
+function datable_display_gender($item)
+{
+   $sex = $_REQUEST['filter_s'] ?? 'all';
+   if ('all' == $sex) {
+      return true;
+   } else {
+      if ($sex == $item['sex']) {
+         return true;
+      }
+   }
+   return false;
+}
 function datable_search_by_name($item)
 {
    $name = strtolower($item['name']);
@@ -56,12 +67,15 @@ function datable_search_by_name($item)
    }
    return false;
 }
+
 function datable_display_table()
 {
    // ##########
    //? adding demo data link
    // ##########
    include_once('demo-database/dataset.php');
+
+
    // ##########
    //? age sorting
    // ##########
@@ -92,10 +106,14 @@ function datable_display_table()
             return $item1['name'] <=> $item2['name'];
          });
       }
-   } 
-   if (isset($_REQUEST['s'])) {
+   }
+   if (isset($_REQUEST['s']) && !empty($_REQUEST['s'])) {
       $search_name = $_REQUEST['s'];
       $data = array_filter($data, 'datable_search_by_name');
+   }
+   if (isset($_REQUEST['filter_s']) && !empty($_REQUEST['filter_s'])) {
+      $search_name = $_REQUEST['s'];
+      $data = array_filter($data, 'datable_display_gender');
    }
    $table->set_data($data);
    $table->prepare_items();

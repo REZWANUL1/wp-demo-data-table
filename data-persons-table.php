@@ -14,6 +14,7 @@ class Persons_Table extends WP_List_Table
       return [
          'cb' => '<input type="checkbox">',
          'name' => __('Name', 'wddt'),
+         'sex' => __('Gender', 'wddt'),
          'email' => __('Email', 'wddt'),
          'age' => __('Age', 'wddt'),
 
@@ -45,15 +46,35 @@ class Persons_Table extends WP_List_Table
    {
       return "<em>{$item['age']}</em>";
    }
+
+   function extra_tablenav($which)
+   {
+      if ('top' == $which) {
+
+
+?>
+         <div class="actions alignleft">
+            <select name="filter_s" id="filter_s">
+               <option value="all">All</option>
+               <option value="M">Male</option>
+               <option value="F">Female</option>
+            </select>
+            <?php
+            submit_button(__('Submit', 'wddt'), 'button', 'submit', false);
+            ?>
+         </div>
+<?php
+      }
+   }
    function prepare_items()
    {
       $paged = $_REQUEST['paged'] ?? 1;
       //pagination
-      $per_page=2;
-      $total_items =count($this->_items);
+      $per_page = 2;
+      $total_items = count($this->_items);
       $this->_column_headers = array($this->get_columns(), array(), $this->get_sortable_columns());
       $data_chunks = array_chunk($this->_items, $per_page);
-      $this->items = $data_chunks[$paged-1];
+      $this->items = $data_chunks[$paged - 1];
       $this->set_pagination_args([
          'total_items' => $total_items,
          'per_page' => $per_page,
